@@ -15,7 +15,8 @@ class DroneCategory(models.Model):
 
 class Drone(models.Model):
     name = models.CharField(max_length=250)
-    drone_category = models.ForeignKey(DroneCategory, on_delete=models.CASCADE, related_name="drones")
+    drone_category = models.ForeignKey(
+        DroneCategory, on_delete=models.CASCADE, related_name="drones")
     manufacturing_date = models.DateTimeField()
     has_it_completed = models.BooleanField(default=False)
     inserted_timestamp = models.DateTimeField(auto_now_add=True)
@@ -35,7 +36,8 @@ class Pilot(models.Model):
         (FEMALE, 'Female'),
     )
     name = models.CharField(max_length=150, default='')
-    gender = models.CharField(max_length=2, choices=GENDER_CHOICES, default=MALE)
+    gender = models.CharField(
+        max_length=2, choices=GENDER_CHOICES, default=MALE)
     races_count = models.IntegerField()
     inserted_timestamp = models.DateTimeField(auto_now_add=True)
 
@@ -47,7 +49,8 @@ class Pilot(models.Model):
 
 
 class Competition(models.Model):
-    pilot = models.ForeignKey(Pilot, related_name="competitions", on_delete=models.CASCADE)
+    pilot = models.ForeignKey(
+        Pilot, related_name="competitions", on_delete=models.CASCADE)
     drone = models.ForeignKey(Drone, on_delete=models.CASCADE)
     distance_in_feet = models.IntegerField()
     distance_achievement_date = models.DateTimeField()
