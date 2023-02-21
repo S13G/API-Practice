@@ -20,4 +20,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('toys/', include('toys.urls')),
     path('', include('drones.urls')),
+    path('api-auth/', include('rest_framework.urls'))
 ]
