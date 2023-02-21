@@ -18,3 +18,5 @@ requests-toolbelt==0.10.1
 rich==13.3.1
 sqlparse==0.4.3
 urllib3==1.26.14
+
+django-filter~=22.1
