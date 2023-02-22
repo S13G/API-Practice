@@ -62,10 +62,10 @@ REST_FRAMEWORK = {
     ),
     # limit per period, d, h, m, s
     'DEFAULT_THROTTLE_RATES': {
-        'anon': '3/hour',
-        'user': '10/hour',
-        'drones': '20/hour',
-        'pilots': '15/hour',
+        'anon': '300/hour',
+        'user': '100/hour',
+        'drones': '200/hour',
+        'pilots': '150/hour',
     },
     # version scheming
     'DEFAULT_VERSIONING_CLASS':
