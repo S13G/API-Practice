@@ -3,6 +3,7 @@ from rest_framework import generics
 from rest_framework import permissions
 from rest_framework.response import Response
 from rest_framework.authentication import TokenAuthentication
+from rest_framework.throttling import ScopedRateThrottle
 
 from drones.custom_permissions import IsCurrentUserOwnerOrReadOnly
 from drones.filters import CompetitionFilter
@@ -16,7 +17,7 @@ from drones.serializers import DroneCategorySerializer, DroneSerializer, PilotSe
 class DroneCategoryList(generics.ListCreateAPIView):
     queryset = DroneCategory.objects.all()
     serializer_class = DroneCategorySerializer
-    name = 'DroneCategory List'
+    name = 'dronecategory-list'
     filter_fields = ('name',)
     ordering_fields = ('name',)
     search_fields = ('name',)
@@ -36,6 +37,8 @@ class DroneList(generics.ListCreateAPIView):
     search_fields = ('name',)
     ordering_fields = ('name', 'manufacturing_date',)
     permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsCurrentUserOwnerOrReadOnly)
+    throttle_classes = (ScopedRateThrottle,)
+    throttle_scope = 'drones'
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
@@ -46,6 +49,8 @@ class DroneDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = DroneSerializer
     name = 'drone-detail'
     permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsCurrentUserOwnerOrReadOnly)
+    throttle_classes = (ScopedRateThrottle,)
+    throttle_scope = 'drones'
 
 
 class PilotList(generics.ListCreateAPIView):
@@ -57,6 +62,8 @@ class PilotList(generics.ListCreateAPIView):
     ordering_fields = ('name', 'races_count',)
     authentication_classes = (TokenAuthentication,)
     permission_classes = (permissions.IsAuthenticated,)
+    throttle_classes = (ScopedRateThrottle,)
+    throttle_scope = 'pilots'
 
 
 class PilotDetail(generics.RetrieveUpdateDestroyAPIView):
@@ -65,6 +72,8 @@ class PilotDetail(generics.RetrieveUpdateDestroyAPIView):
     name = 'pilot-detail'
     authentication_classes = (TokenAuthentication,)
     permission_classes = (permissions.IsAuthenticated,)
+    throttle_classes = (ScopedRateThrottle,)
+    throttle_scope = 'pilots'
 
 
 class CompetitionList(generics.ListCreateAPIView):
@@ -85,8 +94,8 @@ class ApiRoot(generics.GenericAPIView):
 
     def get(self, request, *args, **kwargs):
         return Response({
-            'drone-categories': request.build_absolute_uri(reverse('DroneCategory List')),
-            'drones': request.build_absolute_uri(reverse('Drone List')),
-            'pilots': request.build_absolute_uri(reverse('Pilot List')),
-            'competitions': request.build_absolute_uri(reverse('Competition List'))
+            'drone-categories': request.build_absolute_uri(reverse(DroneCategoryList.name)),
+            'drones': request.build_absolute_uri(reverse(DroneList.name)),
+            'pilots': request.build_absolute_uri(reverse(PilotList.name)),
+            'competitions': request.build_absolute_uri(reverse(CompetitionList.name))
         })

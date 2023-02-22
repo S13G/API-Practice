@@ -55,6 +55,21 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.SessionAuthentication',
     ),
+    # THROTTLING: limits the request for some endpoints
+    'DEFAULT_THROTTLE_CLASSES': (
+        'rest_framework.throttling.AnonRateThrottle',  # for anonymous users
+        'rest_framework.throttling.UserRateThrottle',  # for authenticated and unauthenticated users
+    ),
+    # limit per period, d, h, m, s
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': '3/hour',
+        'user': '10/hour',
+        'drones': '20/hour',
+        'pilots': '15/hour',
+    },
+    # version scheming
+    'DEFAULT_VERSIONING_CLASS':
+        'rest_framework.versioning.NamespaceVersioning',
 }
 
 MIDDLEWARE = [
